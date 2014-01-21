@@ -81,4 +81,7 @@
   <!-- Silent mode -->
   <java-symbol type="id" name="option4" />
   <java-symbol type="id" name="option5" />
+
+  <!-- Hardware key rebinding -->
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
 </resources>
