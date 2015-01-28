@@ -33,4 +33,7 @@
     <!-- QS Customization -->
     <color name="qs_background_drawable_color">#ff263238</color>
 
+    <color name="navring_check_tint">@android:color/white</color>
+    <color name="navring_edit_fill">#FF558B2F</color>
+    <color name="navring_edit_tint">#FF689F38</color>
 </resources>
