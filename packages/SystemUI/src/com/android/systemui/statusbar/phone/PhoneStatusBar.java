@@ -370,6 +370,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // Status bar carrier
     private boolean mShowStatusBarCarrier;
 
+    // Desolation logo
+    private boolean mDesoLogo;
+    private ImageView desoLogo;
+
     // position
     int[] mPositionTmp = new int[2];
     boolean mExpandedVisible;
@@ -487,6 +491,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.PIE_CONTROLS), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_DESO_LOGO),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -574,6 +581,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mShowStatusBarCarrier = Settings.System.getIntForUser(resolver,
                     Settings.System.STATUS_BAR_CARRIER, 0, mCurrentUserId) == 1;
             showStatusBarCarrierLabel(mShowStatusBarCarrier);
+            mDesoLogo = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_DESO_LOGO, 0, mCurrentUserId) == 1;
+            showDesoLogo(mDesoLogo);
         }
     }
 
@@ -3781,6 +3791,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         resetUserSetupObserver();
         setControllerUsers();
     }
+
+    public void showDesoLogo(boolean show) {
+        if (mStatusBarView == null) return;
+        ContentResolver resolver = mContext.getContentResolver();
+        desoLogo = (ImageView) mStatusBarView.findViewById(R.id.deso_logo);
+        if (desoLogo != null) {
+            desoLogo.setVisibility(show ? (mDesoLogo ? View.VISIBLE : View.GONE) : View.GONE);
+        }
+    }
+
 
     private void setControllerUsers() {
         if (mZenModeController != null) {
