@@ -256,6 +256,9 @@ public class ActionHelper {
         } else if (clickAction.equals(ActionConstants.ACTION_BACK)) {
             resId = systemUiResources.getIdentifier(
                         SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_back", null, null);
+        } else if (clickAction.equals(ActionConstants.ACTION_PIN_UNPIN)) {
+            resId = systemUiResources.getIdentifier(
+                        SYSTEMUI_METADATA_NAME + ":drawable/ic_app_pin", null, null);
         } else if (clickAction.equals(ActionConstants.ACTION_RECENTS)) {
             resId = systemUiResources.getIdentifier(
                         SYSTEMUI_METADATA_NAME + ":drawable/ic_sysbar_recent", null, null);
