@@ -1391,6 +1391,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         mHandler.sendEmptyMessage(MSG_DISPATCH_SHOW_GLOBAL_ACTIONS);
     }
 
+    Runnable mBackLongPress = new Runnable() {
+        public void run() {
+            if (!unpinActivity(false) && ActionUtils.killForegroundApp(mContext, mCurrentUserId)) {
+                performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, false);
+                Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
     void showGlobalActionsInternal() {
         sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);
         if (mGlobalActions == null) {
@@ -3588,6 +3597,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         Action.processAction(mContext, mLongPressOnBackBehavior, false);
                         mBackConsumed = true;
                     }
+
                 }
             }
             if (!virtualKey) {
@@ -3708,6 +3718,22 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // Let the application handle the key.
         return 0;
+    }
+
+    private boolean unpinActivity(boolean checkOnly) {
+        if (!hasNavigationBar()) {
+            try {
+                if (ActivityManagerNative.getDefault().isInLockTaskMode()) {
+                    if (!checkOnly) {
+                        ActivityManagerNative.getDefault().stopLockTaskModeOnCurrent();
+                    }
+                    return true;
+                }
+            } catch (RemoteException e) {
+                // ignored
+            }
+        }
+        return false;
     }
 
     /** {@inheritDoc} */
