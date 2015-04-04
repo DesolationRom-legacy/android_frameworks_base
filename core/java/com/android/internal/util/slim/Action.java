@@ -106,7 +106,16 @@ public class Action {
                     barService.toggleKillApp();
                 } catch (RemoteException e) {}
                 return;
-            } else if (action.equals(ActionConstants.ACTION_NOTIFICATIONS)) {
+            } else if (action.equals(ActionConstants.ACTION_PIN_UNPIN)) {
+		try {
+			if(ActivityManagerNative.getDefault().isInLockTaskMode()) {
+				ActivityManagerNative.getDefault().stopLockTaskModeOnCurrent();
+			} else {
+				ActivityManagerNative.getDefault().startLockTaskModeOnCurrent();
+			}
+		} catch (RemoteException e) {}
+		return;
+	    } else if (action.equals(ActionConstants.ACTION_NOTIFICATIONS)) {
                 if (isKeyguardShowing && isKeyguardSecure) {
                     return;
                 }
