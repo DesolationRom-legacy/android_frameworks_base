@@ -64,6 +64,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     }
 
     public ObjectAnimator animateTransitionTo(View v, float toAlpha) {
+        if (v == null) return null;
         return ObjectAnimator.ofFloat(v, "alpha", v.getAlpha(), toAlpha);
     }
 
@@ -115,15 +116,15 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
             anims.start();
             mCurrentAnimation = anims;
         } else {
-            mLeftSide.setAlpha(newAlpha);
-            mStatusIcons.setAlpha(newAlpha);
-            mSignalCluster.setAlpha(newAlpha);
-            mNetworkTraffic.setAlpha(newAlpha);
-            mBattery.setAlpha(newAlphaBC);
-            mClock.setAlpha(newAlphaBC);
-            mCenterClock.setAlpha(newAlphaBC);
-            mLeftClock.setAlpha(newAlphaBC);
-            mDesoLogo.setAlpha(newAlphaBC);
+            if (mLeftSide != null) mLeftSide.setAlpha(newAlpha);
+            if (mStatusIcons != null) mStatusIcons.setAlpha(newAlpha);
+            if (mSignalCluster != null) mSignalCluster.setAlpha(newAlpha);
+            if (mNetworkTraffic != null) mNetworkTraffic.setAlpha(newAlpha);
+            if (mBattery != null) mBattery.setAlpha(newAlphaBC);
+            if (mClock != null) mClock.setAlpha(newAlphaBC);
+            if (mCenterClock != null) mCenterClock.setAlpha(newAlphaBC);
+            if (mLeftClock != null) mLeftClock.setAlpha(newAlphaBC);
+            if (mDesoLogo != null) mDesoLogo.setAlpha(newAlphaBC);
         }
     }
 }
