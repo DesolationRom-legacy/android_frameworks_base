@@ -45,7 +45,6 @@
   <java-symbol type="dimen" name="global_actions_avatar_size" />
 
   <!-- Config.xml entries -->
-  <java-symbol type="integer" name="config_backKillTimeout" />
   <java-symbol type="bool" name="config_samsung_stk" />
 
   <!-- Reboot menu -->
