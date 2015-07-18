@@ -37,14 +37,15 @@ public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
     
     private static String WELCOME_BACK_NOTIFY = "welcome_back_notify" ;
-	private int mBootNotify;
+    private static String FIRST_BOOT_NOTIFY = "first_boot_notify" ;
+	private int mFirstBoot;
 	private int mWelcomeBack;
 	private int mShowProcess;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
 	ContentResolver res = context.getContentResolver();
-	mBootNotify = Settings.Secure.getIntForUser(res, Settings.Secure.USER_SETUP_COMPLETE, 0, UserHandle.USER_CURRENT);
+	mFirstBoot = Settings.System.getIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 0, UserHandle.USER_CURRENT);
 	mWelcomeBack = Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 1);
 	mShowProcess = Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0);
         try {
@@ -57,9 +58,10 @@ public class BootReceiver extends BroadcastReceiver {
             Log.e(TAG, "Can't start load average service");
         }
 		if (mWelcomeBack != 0) {
-			switch (mBootNotify) {
+			switch (mFirstBoot) {
 				case 0:
 					FirstBootNotify(context);
+					Settings.System.putIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 1, UserHandle.USER_CURRENT);
 					Log.i(TAG, "Notified for first boot");
 					break;
 				case 1:

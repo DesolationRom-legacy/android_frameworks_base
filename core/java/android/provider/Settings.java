@@ -3035,6 +3035,12 @@ public final class Settings {
         public static final String WELCOME_BACK_NOTIFY = "welcome_back_notify";
 
         /**
+         * Boolean value whether to show first boot or welcome back notification
+         * @hide
+         */
+        public static final String FIRST_BOOT_NOTIFY = "first_boot_notify" ;
+
+        /**
          * Battery status style on the status bar
          * 0 - Icon portrait
          * 1 - Icon landscape
