@@ -24,6 +24,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -85,9 +86,16 @@ public class BootReceiver extends BroadcastReceiver {
 		.addLine("Build status: "+SystemProperties.get("rom.buildtype"))
 		.addLine("Build date: "+SystemProperties.get("ro.build.date"))
 		.addLine("Device: "+SystemProperties.get("ro.product.device")));
-	NotificationManager mNotificationManager =
-                (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+		final NotificationManager mNotificationManager =
+			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());
+		Handler h = new Handler();
+		long c = 12000;
+		h.postDelayed(new Runnable() {
+			public void run() {
+				mNotificationManager.cancel(1);
+			}
+		}, c);
     }
 	
     public void WelcomeBackNotify(Context context) {
@@ -96,8 +104,15 @@ public class BootReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setContentTitle("Welcome back to DesolationROM")
                 .setContentText("Build status: "+SystemProperties.get("rom.buildtype")+"."+SystemProperties.get("ro.deso.version")+" build!");
-	NotificationManager mNotificationManager =
-	        (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+		final NotificationManager mNotificationManager =
+			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());
+		Handler h = new Handler();
+		long c = 8000;
+		h.postDelayed(new Runnable() {
+			public void run() {
+				mNotificationManager.cancel(1);
+			}
+		}, c);
     }
 }
