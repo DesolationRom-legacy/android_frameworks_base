@@ -39,9 +39,6 @@
     <!-- label for current user in phone options dialog -->
     <string name="global_action_current_user">Current</string>
 
-    <!-- Long-press back kill application -->
-    <string name="app_killed_message">Destroyed</string>
-
     <!-- Reboot menu -->
     <!-- Button to reboot the phone, within the Reboot Options dialog -->
     <string name="reboot_reboot">Reboot</string>
@@ -77,5 +74,4 @@
     <!-- Silent mode -->
     <string name="silent_mode_priority">Priority</string>
     <string name="silent_mode_none">None</string>
-
 </resources>

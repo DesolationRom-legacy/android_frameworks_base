@@ -3029,6 +3029,7 @@ public final class Settings {
         public static final String HEADSET_CONNECT_PLAYER = "headset_connect_player";
 
         /**
+<<<<<<< HEAD
          * Boolean value whether to enable "Welcome back" notification
          * @hide
          */
@@ -3475,6 +3476,225 @@ public final class Settings {
          * @hide
          */
         public static final String MUTE_ANNOYING_NOTIFICATIONS_THRESHOLD = "mute_annoying_notifications_threshold";
+
+        /**
+         * Defines the shortcuts to be shown on lockscreen
+         * Usage is like this: target:icon|target:icon|target:icon
+         * if :icon is not set, default application icon will be used
+         * @hide
+         */
+        public static final String LOCKSCREEN_SHORTCUTS = "lockscreen_shortcuts";
+
+        /**
+         * Whether shorcuts open with normal or longpress
+         * @hide
+         */
+        public static final String LOCKSCREEN_SHORTCUTS_LONGPRESS =
+                "lockscreen_shortcuts_longpress";
+        /**
+         * Whether custom hardware key rebinding is enabled
+         * @hide
+         */
+        public static final String HARDWARE_KEY_REBINDING = "hardware_key_rebinding";
+
+        /**
+         * Action to perform when the back key is pressed (default: ACTION_BACK)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_BACK_ACTION = "key_back_action";
+
+        /**
+         * Action to perform when the back key is long-pressed. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_BACK_LONG_PRESS_ACTION = "key_back_long_press_action";
+
+        /**
+         * Action to perform when the back key is double tapped. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_BACK_DOUBLE_TAP_ACTION = "key_back_double_tap_action";
+
+        /**
+         * Action to perform when the home key is pressed. (default: ACTION_HOME)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_HOME_ACTION = "key_home_action";
+
+        /**
+         * Action to perform when the home key is long-pressed. (default: ACTION_RECENTS)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_HOME_LONG_PRESS_ACTION = "key_home_long_press_action";
+
+        /**
+         * Action to perform when the home key is double taped. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_HOME_DOUBLE_TAP_ACTION = "key_home_double_tap_action";
+
+        /**
+         * Action to perform when the menu key is pressed. (default: ACTION_MENU)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_MENU_ACTION = "key_menu_action";
+
+        /**
+         * Action to perform when the menu key is long-pressed.
+         * (Default is ACTION_NULL on devices with a search key, ACTION_SEARCH on devices without)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_MENU_LONG_PRESS_ACTION = "key_menu_long_press_action";
+
+        /**
+         * Action to perform when the menu key is double tapped. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_MENU_DOUBLE_TAP_ACTION = "key_menu_double_tap_action";
+
+        /**
+         * Action to perform when the assistant (search) key is pressed. (default: ACTION_SEARCH)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_ASSIST_ACTION = "key_assist_action";
+
+        /**
+         * Action to perform when the assistant (search) key is long-pressed.
+         * (default: ACTION_VOICE_SEARCH)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_ASSIST_LONG_PRESS_ACTION = "key_assist_long_press_action";
+
+        /**
+         * Action to perform when the assistant (search) key is double tapped.
+         * (default: ACTION_NULL) (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_ASSIST_DOUBLE_TAP_ACTION = "key_assist_double_tap_action";
+
+        /**
+         * Action to perform when the app switch key is pressed. (default: ACTION_RECENTS)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_APP_SWITCH_ACTION = "key_app_switch_action";
+
+        /**
+         * Action to perform when the app switch key is long-pressed. (default: ACTION_MENU)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_APP_SWITCH_LONG_PRESS_ACTION =
+                "key_app_switch_long_press_action";
+
+        /**
+         * Action to perform when the app switch key is double tapped. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_APP_SWITCH_DOUBLE_TAP_ACTION =
+                "key_app_switch_double_tap_action";
+
+        /**
+         * Action to perform when the camera key is pressed. (default: LAUNCH_CAMERA)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_CAMERA_ACTION = "key_camera_action";
+
+        /**
+         * Action to perform when the camera key is long-pressed. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_CAMERA_LONG_PRESS_ACTION =
+                "key_camera_long_press_action";
+
+        /**
+         * Action to perform when the camera key is double tapped. (default: ACTION_NULL)
+         * (See ButtonsConstants.java for valid values)
+         * @hide
+         */
+        public static final String KEY_CAMERA_DOUBLE_TAP_ACTION =
+                "key_camera_double_tap_action";
+
+        /**
+         * Navigation bar button color
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTON_TINT = "navigation_bar_button_tint";
+
+        /**
+         * Option To Colorize Navigation bar buttons in different modes
+         * 0 = all, 1 = system icons, 2 = system icons + custom user icons
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTON_TINT_MODE = "navigation_bar_button_tint_mode";
+
+        /**
+         * Navigation bar glow color
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_GLOW_TINT = "navigation_bar_glow_tint";
+
+        /**
+         * Wether navigation bar is enabled or not
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
+
+        /**
+         * Wether navigation bar is on landscape on the bottom or on the right
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_CAN_MOVE = "navigation_bar_can_move";
+
+        /**
+         * Navigation bar height when it is on protrait
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
+        /**
+         * Navigation bar height when it is on landscape at the bottom
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
+
+        /**
+         * Navigation bar height when it is on landscape at the right
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+
+        /**
+         * Custom navigation bar intent and action configuration
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_CONFIG = "navigation_bar_config";
+
+        /**
+         * Wether the navbar menu button is on the left/right/both
+         * @hide
+         */
+        public static final String MENU_LOCATION = "menu_location";
+
+        /**
+         * Wether the navbar menu button should show or not
+         * @hide
+         */
+        public static final String MENU_VISIBILITY = "menu_visibility";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -5626,18 +5846,6 @@ public final class Settings {
          * @hide
          */
         public static final String SCREENSAVER_DEFAULT_COMPONENT = "screensaver_default_component";
-
-        /**
-         * Whether to allow killing of the foreground app by long-pressing the Back button
-         * @hide
-         */
-        public static final String KILL_APP_LONGPRESS_BACK = "kill_app_longpress_back";
-
-        /**
-         * Timeout of long-pressing the Back button
-         * @hide
-         */
-        public static final String KILL_APP_LONGPRESS_TIMEOUT = "kill_app_longpress_timeout";
 
         /**
          * The default NFC payment component
