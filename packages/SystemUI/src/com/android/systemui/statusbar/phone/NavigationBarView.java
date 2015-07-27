@@ -105,6 +105,7 @@ public class NavigationBarView extends LinearLayout implements BaseStatusBar.Nav
     private int mMenuVisibility;
     private int mMenuSetting;
     private boolean mOverrideMenuKeys;
+    private boolean mIsImeButtonVisible = false;
 
     private boolean mImeArrowVisibility;
     private boolean mIsImeArrowVisible = false;
