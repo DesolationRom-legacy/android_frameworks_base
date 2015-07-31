@@ -30,6 +30,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.os.RemoteException;
 import android.os.SystemClock;
@@ -82,6 +83,8 @@ public class KeyButtonView extends ImageView {
     private KeyButtonRipple mRipple;
     private PowerManager mPm;
     private LongClickCallback mCallback;
+
+    private final Handler mHandler = new Handler();
 
     private final Runnable mCheckLongPress = new Runnable() {
         public void run() {
@@ -294,15 +297,23 @@ public class KeyButtonView extends ImageView {
                 break;
         }
 
-        ViewParent parent = getParent();
-        while (parent != null && !(parent instanceof NavigationBarView)) {
-            parent = parent.getParent();
-        }
-        if (parent != null) {
-            ((NavigationBarView) parent).onNavButtonTouched();
-        }
+        mHandler.post(mNavButtonDimActivator);
+
         return true;
     }
+
+    private final Runnable mNavButtonDimActivator = new Runnable() {
+        @Override
+        public void run() {
+            ViewParent parent = getParent();
+            while (parent != null && !(parent instanceof NavigationBarView)) {
+                parent = parent.getParent();
+            }
+            if (parent != null) {
+                ((NavigationBarView) parent).onNavButtonTouched();
+            }
+        }
+    };
 
     public void playSoundEffect(int soundConstant) {
         mAudioManager.playSoundEffect(soundConstant, ActivityManager.getCurrentUser());
