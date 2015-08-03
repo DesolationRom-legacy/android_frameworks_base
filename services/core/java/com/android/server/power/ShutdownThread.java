@@ -31,6 +31,7 @@ import android.nfc.NfcAdapter;
 import android.nfc.INfcAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -231,6 +232,7 @@ public final class ShutdownThread extends Thread {
                                             com.android.internal.R.array.shutdown_reboot_actions);
                                     if (selected >= 0 && selected < actions.length) {
                                         mRebootReason = actions[selected];
+                                        Settings.System.putInt(context.getContentResolver(), Settings.System.REBOOT_TITLE, selected);
                                         if (actions[selected].equals(SOFT_REBOOT)) {
                                             doSoftReboot();
                                             return;
@@ -699,9 +701,9 @@ public final class ShutdownThread extends Thread {
             } catch (InterruptedException unused) {
             }
         }
-
         // Shutdown power
         Log.i(TAG, "Performing low-level shutdown...");
+        Settings.System.putInt(context.getContentResolver(), Settings.System.REBOOT_TITLE, 4);
         PowerManagerService.lowLevelShutdown();
     }
 

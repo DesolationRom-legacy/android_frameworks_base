@@ -38,4 +38,12 @@
         <item>NW</item> <!-- North west -->
     </string-array>
 
+    <string-array name="reboot_title_entries">
+        <item>"Welcome back to DesolationROM"</item>
+        <item>"UI Restarted"</item>
+        <item>"What did you flash?!"</item>
+        <item>"Back from Bootloader!"</item>
+        <item>"Please don't turn me off again ...."</item>
+    </string-array>
+
 </resources>
