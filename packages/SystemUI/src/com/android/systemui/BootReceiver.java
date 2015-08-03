@@ -23,6 +23,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.SystemProperties;
@@ -39,9 +40,13 @@ public class BootReceiver extends BroadcastReceiver {
     
     private static String WELCOME_BACK_NOTIFY = "welcome_back_notify" ;
     private static String FIRST_BOOT_NOTIFY = "first_boot_notify" ;
+    private static String REBOOT_TITLE = "reboot_title";
 	private int mFirstBoot;
 	private int mWelcomeBack;
 	private int mShowProcess;
+	private String mContentTitle;
+	private String[] mRebootTitles;
+	private int mRebootTitleType;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -49,6 +54,8 @@ public class BootReceiver extends BroadcastReceiver {
 	mFirstBoot = Settings.System.getIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 0, UserHandle.USER_CURRENT);
 	mWelcomeBack = Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 1);
 	mShowProcess = Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0);
+	mRebootTitleType = Settings.System.getInt(res, Settings.System.REBOOT_TITLE, 1);
+	mRebootTitles = context.getResources().getStringArray(R.array.reboot_title_entries);
         try {
             // Start the load average overlay, if activated
             if (mShowProcess != 0) {
@@ -58,6 +65,7 @@ public class BootReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e(TAG, "Can't start load average service");
         }
+		mContentTitle = mRebootTitles[Integer.valueOf(mRebootTitleType)];
 		if (mWelcomeBack != 0) {
 			switch (mFirstBoot) {
 				case 0:
@@ -66,7 +74,7 @@ public class BootReceiver extends BroadcastReceiver {
 					Log.i(TAG, "Notified for first boot");
 					break;
 				case 1:
-					WelcomeBackNotify(context);
+					WelcomeBackNotify(context, mContentTitle);
 					Log.i(TAG, "Notified for returning boot");
 					break;
 			}
@@ -98,12 +106,12 @@ public class BootReceiver extends BroadcastReceiver {
 		}, c);
     }
 	
-    public void WelcomeBackNotify(Context context) {
+    public void WelcomeBackNotify(Context context, String contenttitle) {
         Notification.Builder mBuilder = new Notification.Builder(context)
 	        .setSmallIcon(R.drawable.first_boot_notify)
                 .setAutoCancel(true)
-                .setContentTitle("Welcome back to DesolationROM")
-                .setContentText("Build status: "+SystemProperties.get("rom.buildtype")+"."+SystemProperties.get("ro.deso.version")+" build!");
+                .setContentTitle("Let's #GetDesolated. Build date: "+SystemProperties.get("ro.build.date"))
+                .setContentText(contenttitle);
 		final NotificationManager mNotificationManager =
 			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
 		mNotificationManager.notify(1, mBuilder.build());

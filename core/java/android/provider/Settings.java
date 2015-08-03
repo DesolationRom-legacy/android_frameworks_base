@@ -3962,6 +3962,8 @@ public final class Settings {
          * @hide
          */
         public static final String DIM_NAV_BUTTONS_TOUCH_ANYWHERE = "dim_nav_buttons_touch_anywhere";
+        
+        public static final String REBOOT_TITLE = "reboot_title";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
