@@ -62,12 +62,10 @@
 #include "AudioPlayer.h"
 
 #define OEM_BOOTANIMATION_FILE "/oem/media/bootanimation.zip"
-#define DESO_BOOTANIMATION_FILE  "/system/media/desoboot.zip"
 #define SYSTEM_BOOTANIMATION_FILE "/system/media/bootanimation.zip"
 #define SYSTEM_ENCRYPTED_BOOTANIMATION_FILE "/system/media/bootanimation-encrypted.zip"
 
 #define OEM_SHUTDOWN_ANIMATION_FILE "/oem/media/shutdownanimation.zip"
-#define DESO_SHUTDOWN_ANIMATION_FILE "/system/media/desoshutdown.zip"
 #define SYSTEM_SHUTDOWN_ANIMATION_FILE "/system/media/shutdownanimation.zip"
 #define SYSTEM_ENCRYPTED_SHUTDOWN_ANIMATION_FILE "/system/media/shutdownanimation-encrypted.zip"
 
@@ -840,10 +838,10 @@ bool BootAnimation::movie()
 
 char *BootAnimation::getAnimationFileName(ImageID image)
 {
-    char *fileName[2][4] = { { OEM_BOOTANIMATION_FILE, DESO_BOOTANIMATION_FILE,
+    char *fileName[2][3] = { { OEM_BOOTANIMATION_FILE,
             SYSTEM_BOOTANIMATION_FILE,
             SYSTEM_ENCRYPTED_BOOTANIMATION_FILE }, {
-            OEM_SHUTDOWN_ANIMATION_FILE, DESO_SHUTDOWN_ANIMATION_FILE,
+            OEM_SHUTDOWN_ANIMATION_FILE,
             SYSTEM_SHUTDOWN_ANIMATION_FILE,
             SYSTEM_ENCRYPTED_SHUTDOWN_ANIMATION_FILE} };
     int state;
