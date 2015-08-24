@@ -62,6 +62,7 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.service.dreams.DreamService;
 import android.service.dreams.IDreamManager;
 import android.service.notification.NotificationListenerService;
@@ -107,6 +108,7 @@ import com.android.systemui.statusbar.phone.NavigationBarOverlay;
 import com.android.systemui.statusbar.policy.PieController;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.SystemUI;
+import com.android.systemui.BootReceiver;
 import com.android.systemui.statusbar.NotificationData.Entry;
 import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
@@ -164,6 +166,8 @@ public abstract class BaseStatusBar extends SystemUI implements
             "com.android.systemui.statusbar.banner_action_cancel";
     private static final String BANNER_ACTION_SETUP =
             "com.android.systemui.statusbar.banner_action_setup";
+
+    public int mNotifAccentColor;
 
     protected CommandQueue mCommandQueue;
     protected IStatusBarService mBarService;
@@ -335,6 +339,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     };
 
     private class SettingsObserver extends ContentObserver {
+        private final Uri NOTIF_ACCENT_COLOR_URI = Settings.System.getUriFor(Settings.System.NOTIF_ACCENT_COLOR);
+
         public SettingsObserver(Handler handler) {
             super(handler);
         }
@@ -350,15 +356,18 @@ public abstract class BaseStatusBar extends SystemUI implements
             resolver.registerContentObserver(
                     Settings.Secure.getUriFor(Settings.Secure.SEARCH_PANEL_ENABLED),
                     false, this);
-            update();
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NOTIF_ACCENT_COLOR),
+                    false, this);
+            update(null);
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
-            update();
+            update(uri);
         }
 
-        private void update() {
+        private void update(Uri uri) {
             ContentResolver resolver = mContext.getContentResolver();
             final String dndString = Settings.System.getString(mContext.getContentResolver(),
                     Settings.System.HEADS_UP_CUSTOM_VALUES);
@@ -366,7 +375,11 @@ public abstract class BaseStatusBar extends SystemUI implements
                     Settings.System.HEADS_UP_BLACKLIST_VALUES);
             splitAndAddToArrayList(mDndList, dndString, "\\|");
             splitAndAddToArrayList(mBlacklist, blackString, "\\|");
-
+            try { mNotifAccentColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ACCENT_COLOR);
+                if (uri == null || NOTIF_ACCENT_COLOR_URI.equals(uri)){
+                  com.android.systemui.BootReceiver.WelcomeBackNotify(mContext, "Color change preview", mNotifAccentColor);
+                }
+            } catch( SettingNotFoundException e) {}
             mSearchPanelViewEnabled = Settings.Secure.getInt(
                     resolver, Settings.Secure.SEARCH_PANEL_ENABLED, 1) == 1;
         }

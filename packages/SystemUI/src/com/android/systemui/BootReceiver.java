@@ -31,31 +31,42 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 
+import java.util.Random;
+
 /**
  * Performs a number of miscellaneous, non-system-critical actions
  * after the system has finished booting.
  */
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = "SystemUIBootReceiver";
-    
+
     private static String WELCOME_BACK_NOTIFY = "welcome_back_notify" ;
     private static String FIRST_BOOT_NOTIFY = "first_boot_notify" ;
     private static String REBOOT_TITLE = "reboot_title";
-	private int mFirstBoot;
-	private int mWelcomeBack;
-	private int mShowProcess;
-	private String mContentTitle;
-	private String[] mRebootTitles;
-	private int mRebootTitleType;
+  	private int mFirstBoot;
+  	private int mWelcomeBack;
+  	private int mShowProcess;
+    private int accentColor;
+  	private String mContentTitle;
+  	private String[] mRebootTitles;
+  	private int mRebootTitleType;
+    private int mNotifRandomAccentColor;
+    private int mNotifAccentColor;
+    private int colorpicker;
+    private static final Random RGBrandom = new Random();
 
     @Override
     public void onReceive(final Context context, Intent intent) {
-	ContentResolver res = context.getContentResolver();
-	mFirstBoot = Settings.System.getIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 0, UserHandle.USER_CURRENT);
-	mWelcomeBack = Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 1);
-	mShowProcess = Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0);
-	mRebootTitleType = Settings.System.getInt(res, Settings.System.REBOOT_TITLE, 1);
-	mRebootTitles = context.getResources().getStringArray(R.array.reboot_title_entries);
+      	ContentResolver res = context.getContentResolver();
+      	mFirstBoot = Settings.System.getIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 0, UserHandle.USER_CURRENT);
+      	mWelcomeBack = Settings.System.getInt(res, Settings.System.WELCOME_BACK_NOTIFY, 1);
+      	mShowProcess = Settings.Global.getInt(res, Settings.Global.SHOW_PROCESSES, 0);
+      	mRebootTitleType = Settings.System.getInt(res, Settings.System.REBOOT_TITLE, 1);
+      	mRebootTitles = context.getResources().getStringArray(R.array.reboot_title_entries);
+        mNotifRandomAccentColor = Settings.System.getInt(res, Settings.System.NOTIF_ACCENT_COLOR_RANDOM, 1);
+        mNotifAccentColor = Settings.System.getInt(res, Settings.System.NOTIF_ACCENT_COLOR_DEFAULT, 0);
+        colorpicker = Settings.System.getInt(res, Settings.System.NOTIF_ACCENT_COLOR, 0xff33B5E5);
+        accentColor = setAccentColor();
         try {
             // Start the load average overlay, if activated
             if (mShowProcess != 0) {
@@ -65,62 +76,71 @@ public class BootReceiver extends BroadcastReceiver {
         } catch (Exception e) {
             Log.e(TAG, "Can't start load average service");
         }
-		mContentTitle = mRebootTitles[Integer.valueOf(mRebootTitleType)];
-		if (mWelcomeBack != 0) {
-			switch (mFirstBoot) {
-				case 0:
-					FirstBootNotify(context);
-					Settings.System.putIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 1, UserHandle.USER_CURRENT);
-					Log.i(TAG, "Notified for first boot");
-					break;
-				case 1:
-					WelcomeBackNotify(context, mContentTitle);
-					Log.i(TAG, "Notified for returning boot");
-					break;
-			}
-		} else {
-			Log.i(TAG, "Welcome notifications disabled");
-		}
-    }
-    
+      		mContentTitle = mRebootTitles[Integer.valueOf(mRebootTitleType)];
+      		if (mWelcomeBack != 0) {
+      			switch (mFirstBoot) {
+      				case 0:
+      					FirstBootNotify(context);
+      					Settings.System.putIntForUser(res, Settings.System.FIRST_BOOT_NOTIFY, 1, UserHandle.USER_CURRENT);
+      					Log.i(TAG, "Notified for first boot");
+      					break;
+      				case 1:
+      					WelcomeBackNotify(context, mContentTitle, accentColor);
+      					Log.i(TAG, "Notified for returning boot");
+      					break;
+        			}
+        		} else {
+        			Log.i(TAG, "Welcome notifications disabled");
+        		}
+        }
+
     public void FirstBootNotify(Context context) {
         Notification.Builder mBuilder = new Notification.Builder(context)
-	        .setSmallIcon(R.drawable.first_boot_notify)
-                .setAutoCancel(true)
-                .setContentTitle("Welcome to DesolationROM")
-                .setContentText("")
-		.setStyle(new Notification.InboxStyle()
-		.setBigContentTitle("Welcome to DesolationROM")
-		.addLine("Build status: "+SystemProperties.get("rom.buildtype"))
-		.addLine("Build date: "+SystemProperties.get("ro.build.date"))
-		.addLine("Device: "+SystemProperties.get("ro.product.device")));
-		final NotificationManager mNotificationManager =
-			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(1, mBuilder.build());
-		Handler h = new Handler();
-		long c = 12000;
-		h.postDelayed(new Runnable() {
-			public void run() {
-				mNotificationManager.cancel(1);
-			}
-		}, c);
+      	    .setSmallIcon(R.drawable.first_boot_notify)
+            .setAutoCancel(true)
+            .setContentTitle("Welcome to DesolationROM")
+            .setContentText("")
+      	    .setStyle(new Notification.InboxStyle()
+      	.setBigContentTitle("Welcome to DesolationROM")
+        		.addLine("Build status: "+SystemProperties.get("rom.buildtype"))
+        		.addLine("Build date: "+SystemProperties.get("ro.build.date"))
+        		.addLine("Device: "+SystemProperties.get("ro.product.device")));
+      	final NotificationManager mNotificationManager =
+      			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+      	mNotificationManager.notify(1, mBuilder.build());
+      	Handler h = new Handler();
+      	long c = 12000;
+      	h.postDelayed(new Runnable() {
+      		public void run() {
+      			mNotificationManager.cancel(1);
+      		}
+      	}, c);
     }
-	
-    public void WelcomeBackNotify(Context context, String contenttitle) {
+
+    public static void WelcomeBackNotify(Context context, String contenttitle, int color) {
         Notification.Builder mBuilder = new Notification.Builder(context)
 	        .setSmallIcon(R.drawable.first_boot_notify)
                 .setAutoCancel(true)
-                .setContentTitle("Let's #GetDesolated. Build date: "+SystemProperties.get("ro.build.date"))
-                .setContentText(contenttitle);
-		final NotificationManager mNotificationManager =
-			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
-		mNotificationManager.notify(1, mBuilder.build());
-		Handler h = new Handler();
-		long c = 8000;
-		h.postDelayed(new Runnable() {
-			public void run() {
-				mNotificationManager.cancel(1);
-			}
-		}, c);
+                .setContentTitle("Let's #GetDesolated.")
+                .setContentText(contenttitle)
+                .setColor(color);
+    		final NotificationManager mNotificationManager =
+    			(NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+    		mNotificationManager.notify(1, mBuilder.build());
+    		Handler h = new Handler();
+    		long c = 8000;
+    		h.postDelayed(new Runnable() {
+    			public void run() {
+    				mNotificationManager.cancel(1);
+    			}
+    		}, c);
+    }
+
+    private int setAccentColor(){
+      if (mNotifAccentColor == 1) {
+        return colorpicker;
+      } else {
+        return (RGBrandom.nextInt(99999999) + 1);
+      }
     }
 }

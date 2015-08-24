@@ -20,6 +20,7 @@ import android.annotation.IntDef;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -39,6 +40,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.MathUtils;
@@ -53,6 +55,7 @@ import com.android.internal.util.NotificationColorUtil;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.Math;
 import java.lang.reflect.Constructor;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -519,8 +522,8 @@ public class Notification implements Parcelable
      * {@link #icon} image (stenciled in white) atop a field of this color. Alpha components are
      * ignored.
      */
-    public static final Random RGBrandom = new Random();
-    public int color = RGBrandom.nextInt(99999999) + 1;
+
+    public static int color;
 
     /**
      * Special value of {@link #color} telling the system not to decorate this notification with
@@ -529,8 +532,8 @@ public class Notification implements Parcelable
     public static final int COLOR_DEFAULT = 0; // AKA Color.TRANSPARENT
 
     /**
-     * Sphere of visibility of this notification, which affects how and when the SystemUI reveals 
-     * the notification's presence and contents in untrusted situations (namely, on the secure 
+     * Sphere of visibility of this notification, which affects how and when the SystemUI reveals
+     * the notification's presence and contents in untrusted situations (namely, on the secure
      * lockscreen).
      *
      * The default level, {@link #VISIBILITY_PRIVATE}, behaves exactly as notifications have always
@@ -883,6 +886,12 @@ public class Notification implements Parcelable
      * @hide
      */
     public static final String EXTRA_FORCE_SHOW_LIGHTS = "android.forceShowLights";
+
+    public static int mNotifRandomAccentColor;
+    public static int mNotifAccentColor;
+    public static int mNotifCustomAccentColor;
+    public static final Random RGBrandom = new Random();
+    //public static int mRandomRGB = ;
 
     /**
      * Structure to encapsulate a named action that can be shown as part of this notification.
@@ -1526,8 +1535,17 @@ public class Notification implements Parcelable
             this.publicVersion.cloneInto(that.publicVersion, heavy);
         }
 
-        that.color = this.color;
+        if (mNotifRandomAccentColor == 1) {  //Only overrides if Random is enabled
+           that.color = ((RGBrandom.nextInt(100000000) + 1) - 200000001);
+        }
 
+        if (mNotifAccentColor == 1) {  //Overrides Random Color Switch & 'this.color'
+           that.color = mNotifCustomAccentColor;
+        } else {
+           that.color = this.color;
+        }
+
+        Log.i(TAG, "Current color chosen is: " + this.color);
         if (!heavy) {
             that.lightenPayload(); // will clean out extras
         }
@@ -1739,8 +1757,8 @@ public class Notification implements Parcelable
         builder.setSmallIcon(this.icon);
         builder.setPriority(this.priority);
         builder.setTicker(this.tickerText);
-        builder.setNumber(this.number);
         builder.setColor(this.color);
+        builder.setNumber(this.number);
         builder.mFlags = this.flags;
         builder.setSound(this.sound, this.audioStreamType);
         builder.setDefaults(this.defaults);
@@ -1984,7 +2002,17 @@ public class Notification implements Parcelable
         private Notification mPublicVersion = null;
         private final NotificationColorUtil mColorUtil;
         private ArrayList<String> mPeople;
-        private int mColor = RGBrandom.nextInt(99999999) + 1;
+        public int mColor = setAccentColor();
+
+        public int setAccentColor(){
+          if (mNotifAccentColor == 1) {
+            return mNotifCustomAccentColor;
+          } else if (mNotifRandomAccentColor == 1) {
+            return  ((RGBrandom.nextInt(100000000) + 1) - 200000001);
+          } else {
+            return COLOR_DEFAULT;
+          }
+        }
 
         /**
          * The user that built the notification originally.
@@ -2720,8 +2748,8 @@ public class Notification implements Parcelable
          * @return The same Builder.
          */
         public Builder setColor(int argb) {
-            mColor = argb;
-            return this;
+          mColor = argb;
+          return this;
         }
 
         private Drawable getProfileBadgeDrawable() {
@@ -3466,7 +3494,7 @@ public class Notification implements Parcelable
         }
 
         /**
-         * @deprecated Use {@link #build()} instead.
+         * @deprecated Use {@link #} instead.
          */
         @Deprecated
         public Notification getNotification() {
@@ -3502,6 +3530,7 @@ public class Notification implements Parcelable
             }
 
             mHasThreeLines = false;
+            mNotifAccentColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ACCENT_COLOR_DEFAULT, 0);
             return n;
         }
 

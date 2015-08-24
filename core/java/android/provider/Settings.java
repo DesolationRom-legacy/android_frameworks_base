@@ -3105,6 +3105,11 @@ public final class Settings {
         public static final String FIRST_BOOT_NOTIFY = "first_boot_notify" ;
 
         /**
+          * Initializes content title used in Welcome back notification
+          */
+        public static final String REBOOT_TITLE = "reboot_title";
+
+        /**
          * Battery status style on the status bar
          * 0 - Icon portrait
          * 1 - Icon landscape
@@ -3339,7 +3344,7 @@ public final class Settings {
          */
         public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
 
-        /** 
+        /**
          * Whether to vibrate when quick settings tile is pressed.
          * @hide
          */
@@ -3943,8 +3948,23 @@ public final class Settings {
          * @hide
          */
         public static final String DIM_NAV_BUTTONS_TOUCH_ANYWHERE = "dim_nav_buttons_touch_anywhere";
-        
-        public static final String REBOOT_TITLE = "reboot_title";
+
+        /**
+         * Boolean value whether to use custom color picker
+         */
+        public static final String NOTIF_ACCENT_COLOR_DEFAULT = "notif_accent_default";
+
+        /**
+         * Boolean value whether to use random hex color
+         */
+        public static final String NOTIF_ACCENT_COLOR_RANDOM = "notif_accent_color_random";
+
+        /**
+         * Custom Notification Accents Color
+         * @hide
+         */
+        public static final String NOTIF_ACCENT_COLOR = "notif_accent_color";
+
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

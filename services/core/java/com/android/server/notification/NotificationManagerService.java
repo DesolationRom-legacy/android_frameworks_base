@@ -68,6 +68,7 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.service.notification.Condition;
 import android.service.notification.IConditionListener;
 import android.service.notification.IConditionProvider;
@@ -113,6 +114,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.Math;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -275,6 +277,10 @@ public class NotificationManagerService extends SystemService {
     private static final int REASON_LISTENER_CANCEL_ALL = 11;
     private static final int REASON_GROUP_SUMMARY_CANCELED = 12;
     private static final int REASON_GROUP_OPTIMIZATION = 13;
+
+    public static int mNotifRandomAccentColor;
+    public static int mNotifAccentColor;
+    public static int mNotifCustomAccentColor;
 
     private static class Archive {
         final int mBufferSize;
@@ -815,6 +821,46 @@ public class NotificationManagerService extends SystemService {
         }
     };
 
+    class NotifyColorObserver extends ContentObserver {
+        private final Uri NOTIF_ACCENT_COLOR_URI
+                = Settings.System.getUriFor(Settings.System.NOTIF_ACCENT_COLOR);
+        private final Uri NOTIF_ACCENT_RANDOM_URI
+                = Settings.System.getUriFor(Settings.System.NOTIF_ACCENT_COLOR_RANDOM);
+        private final Uri NOTIF_ACCENT_COLOR_DEFAULT_URI
+                = Settings.System.getUriFor(Settings.System.NOTIF_ACCENT_COLOR_DEFAULT);
+
+        NotifyColorObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = getContext().getContentResolver();
+            resolver.registerContentObserver(NOTIF_ACCENT_COLOR_URI,
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(NOTIF_ACCENT_RANDOM_URI,
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(NOTIF_ACCENT_COLOR_DEFAULT_URI,
+                    false, this, UserHandle.USER_ALL);
+
+            update(null);
+        }
+
+        @Override public void onChange(boolean selfChange, Uri uri) {
+            update(uri);
+        }
+
+        public void update(Uri uri) {
+            ContentResolver resolver = getContext().getContentResolver();
+            mNotifCustomAccentColor = Settings.System.getInt(resolver, Settings.System.NOTIF_ACCENT_COLOR, 0);
+            mNotifRandomAccentColor = Settings.System.getInt(resolver, Settings.System.NOTIF_ACCENT_COLOR_RANDOM, 1);
+            mNotifAccentColor = Settings.System.getInt(resolver, Settings.System.NOTIF_ACCENT_COLOR_DEFAULT, 0xff33B5E5);
+            android.app.Notification.mNotifRandomAccentColor = mNotifRandomAccentColor;
+            android.app.Notification.mNotifCustomAccentColor = mNotifCustomAccentColor;
+            android.app.Notification.mNotifAccentColor = mNotifAccentColor;
+            Log.i(TAG, "NotifCustomAccentColor is set to "+Integer.toString(mNotifCustomAccentColor));
+        }
+    }
+
     class LEDSettingsObserver extends ContentObserver {
         private final Uri NOTIFICATION_LIGHT_PULSE_URI
                 = Settings.System.getUriFor(Settings.System.NOTIFICATION_LIGHT_PULSE);
@@ -901,6 +947,7 @@ public class NotificationManagerService extends SystemService {
     }
 
     private LEDSettingsObserver mSettingsObserver;
+    private NotifyColorObserver mColorObserver;
     private ZenModeHelper mZenModeHelper;
 
     private final Runnable mBuzzBeepBlinked = new Runnable() {
@@ -1047,6 +1094,8 @@ public class NotificationManagerService extends SystemService {
                 null);
 
         mSettingsObserver = new LEDSettingsObserver(mHandler);
+        mColorObserver = new NotifyColorObserver(mHandler);
+        mColorObserver.observe();
         mSettingsObserver.observe();
 
         mArchive = new Archive(resources.getInteger(
