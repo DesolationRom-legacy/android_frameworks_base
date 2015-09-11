@@ -28,24 +28,24 @@ import java.util.ArrayList;
 public class IOHelper {
 
     private static final String TAG = "DesoCore IOHelper";
-    
+
     private static FilenameFilter mZipFilter = new FilenameFilter() {
 		public boolean accept(File dir, String name) {
 			return name.toLowerCase().endsWith(".zip");
 		}
     };
-    
+
     private static FileFilter mDirFilter = new FileFilter() {
 		public boolean accept(File file) {
 			return file.isDirectory();
 		}
     };
 
-   public static CharSequence[] zipFileFilter(String path){
+   public static String[] zipFileFilter(String path){
 	File f = new File(path);
 	File[] g;
 	g = f.listFiles(mDirFilter);
-	List<CharSequence> ret = new ArrayList<CharSequence>();
+	List<String> ret = new ArrayList<String>();
 	for (File a: g){
 		File[] h = a.listFiles(mZipFilter);
 		for (File o: h){
@@ -58,7 +58,7 @@ public class IOHelper {
 	for (File b: g){
 		String dir = b.getAbsolutePath();
 		Log.i(TAG, " Found Path: "+dir);
-		zipFileFilter(dir);	
+		zipFileFilter(dir);
 		}
 		File[] n = f.listFiles(mZipFilter);
 			for (File c: n){
@@ -67,7 +67,7 @@ public class IOHelper {
 					Log.i(TAG, " Found file: "+c.getAbsolutePath());
 				}
 			}
-		CharSequence[] ret2 = new CharSequence[ret.size()];
+		String[] ret2 = new String[ret.size()];
 		ret2 = ret.toArray(ret2);
 		return ret2;
 	}
