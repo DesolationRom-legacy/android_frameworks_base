@@ -67,12 +67,15 @@
                     android:id="@+id/deso_logo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingEnd="1dip"
+                    android:maxWidth="20dp"
+                    android:maxHeight="20dp"  
+   	            android:paddingTop="4dip"
+ 		    android:paddingRight="4dip"
                     android:src="@drawable/ic_status_bar_deso_logo"
-                    android:scaleType="center"
-                    android:visibility="gone"
-                    />  
-
+                    android:scaleType="fitCenter"
+                    android:adjustViewBounds="true"
+                    android:visibility="gone" />
+                
                 <com.android.keyguard.AlphaOptimizedLinearLayout
                     android:id="@+id/left_clock_layout"
                     android:gravity="center"
