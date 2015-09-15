@@ -376,8 +376,11 @@ public abstract class BaseStatusBar extends SystemUI implements
             splitAndAddToArrayList(mDndList, dndString, "\\|");
             splitAndAddToArrayList(mBlacklist, blackString, "\\|");
             try { mNotifAccentColor = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NOTIF_ACCENT_COLOR);
+                  int mNotifAccentColorSwitch = Settings.System.getInt(resolver, Settings.System.NOTIF_ACCENT_COLOR_DEFAULT);
                 if (uri == null || NOTIF_ACCENT_COLOR_URI.equals(uri)){
-                  com.android.systemui.BootReceiver.WelcomeBackNotify(mContext, "Color change preview", mNotifAccentColor);
+                  if( mNotifAccentColorSwitch == 1){
+                    com.android.systemui.BootReceiver.WelcomeBackNotify(mContext, "Color change preview", mNotifAccentColor);
+                  }
                 }
             } catch( SettingNotFoundException e) {}
             mSearchPanelViewEnabled = Settings.Secure.getInt(
