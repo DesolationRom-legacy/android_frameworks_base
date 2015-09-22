@@ -288,7 +288,8 @@ public class KeyButtonView extends ImageView {
                 } else {
                     // no key code, just a regular ImageView
                     if (doIt) {
-                        performClick();
+			sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
+                        //performClick();
                     }
                 }
                 if (mSupportsLongpress) {
