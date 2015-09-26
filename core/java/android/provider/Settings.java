@@ -3999,6 +3999,12 @@ public final class Settings {
         public static final String STATUS_BAR_DESO_LOGO = "status_bar_deso_logo";
 
         /**
+         * Selected boot animation summary
+         * @hide
+         */
+        public static final String SET_BOOTANIMATION_KEY = "select_bootanimation";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
